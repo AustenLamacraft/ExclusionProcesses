@@ -1,7 +1,12 @@
-abstract type EPState <: AbstractArray
-    # State of the exclusion process
+abstract type EPState <: AbstractArray end
+
+type SingleSpinState <: EPState
+    # Single spin encoding
 end
 
+type MultiSpinState <: EPState
+    # Multispin encoding
+end
 
 struct ExclusionProcess
     state::EPState
@@ -9,5 +14,5 @@ struct ExclusionProcess
     # needs an update method...
 
     update!::Function
-    
+
 end
