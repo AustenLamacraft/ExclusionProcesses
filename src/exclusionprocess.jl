@@ -1,18 +1,27 @@
-abstract type EPState <: AbstractArray end
+module exclusionprocess
 
-type SingleSpinState <: EPState
-    # Single spin encoding
+export EPState, SingleSpinState, MultSpinState, ExclusionProcess, initialize!, update!
+
+abstract type EPState end
+
+mutable struct SingleSpinState <: EPState
+    state::Vector{Bool}
 end
 
-type MultiSpinState <: EPState
-    # Multispin encoding
+mutable struct MultiSpinState <: EPState
+    state::Vector{UInt}
 end
 
-struct ExclusionProcess
+abstract type ExclusionProcess end
+
+mutable struct EP <: ExclusionProcess
     state::EPState
+end
 
-    # needs an update method...
+initialize!{T<:EPState}(::Type{T}) =
+throw(ArgumentError("Initialization not defined for state $T."))
 
-    update!::Function
+update!{T<:ExclusionProcess}(::Type{T}) =
+throw(ArgumentError("Update not defined for exclusion process $T."))
 
 end
