@@ -1,6 +1,6 @@
-import .exclusionprocess
+import .exclusionprocess: EP
 
-using .exclusionprocess
+using .exclusionprocess: EP
 
-mutable struct SEP <: ExclusionProcess
+mutable struct SEP <: EP
 end

@@ -5,6 +5,7 @@ module ExclusionProcesses
 # import Base: func1 #Any function you add dispatches to need to be imported directly
 
 include("exclusionprocess.jl")
+include("epstate.jl")
 include("SEP.jl")
 
 
