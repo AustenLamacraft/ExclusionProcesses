@@ -2,8 +2,7 @@ module exclusionprocess
 
 export EP, update!
 
-import .epstate: EPState
-
+import ..epstate: EPState, SingleSpinState, MultiSpinState
 
 abstract type ExclusionProcess end
 
