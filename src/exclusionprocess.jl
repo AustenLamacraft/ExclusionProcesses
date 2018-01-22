@@ -1,6 +1,6 @@
 module exclusionprocess
 
-export EP, update!
+export ExclusionProcess, update!
 
 import ..epstate: EPState, SingleSpinState, MultiSpinState
 
