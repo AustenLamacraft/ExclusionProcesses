@@ -6,7 +6,7 @@ export EPState, SingleSpinState, MultiSpinState
 Abstract base class for a configuration of an exclusion process.
 
 All deriving state classes have to define the field `spins` that encodes the
-spin configuration. 
+spin configuration.
 """
 abstract type EPState end
 
@@ -15,9 +15,12 @@ abstract type EPState end
 
 State of a single process. The `spins` field gives spin configuration as Booleans.
 """
-mutable struct SingleSpinState <: EPState
-    spins::Vector{Bool}
+struct SingleSpinState <: EPState
+    spins::BitArray{1}
 end
+
+SingleSpinState(n_sites::Int) = SingleSpinState(rand(Bool, n_sites))
+SingleSpinState(n_sites::Int, n_particles::Int) = SingleSpinState(shuffle(cat(1,trues(n_particles),falses(n_sites - n_particles))))
 
 """
     MultiSpinState(state::Vector{UInt})
@@ -25,7 +28,7 @@ end
 State of several processes (up to 64). The `spins` field gives spin
 configurations, encoded in the bitstring forming `UInt`.
 """
-mutable struct MultiSpinState <: EPState
+struct MultiSpinState <: EPState
     spins::Vector{UInt}
 end
 
