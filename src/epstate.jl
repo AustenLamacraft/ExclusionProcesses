@@ -1,6 +1,6 @@
 module epstate
 
-export EPState, SingleSpinState, MultiSpinState
+export EPState, SingleSpinState, MultiSpinState, spin_configs
 
 """
 Abstract base class for a configuration of an exclusion process.
@@ -16,11 +16,20 @@ abstract type EPState end
 State of a single process. The `spins` field gives spin configuration as Booleans.
 """
 struct SingleSpinState <: EPState
-    spins::BitArray{1}
-end
+    spins::BitVector
 
-SingleSpinState(n_sites::Int) = SingleSpinState(bitrand(n_sites))
-SingleSpinState(n_sites::Int, n_particles::Int) = SingleSpinState(random_spins(n_sites, n_particles))
+    SingleSpinState(init_spins::BitVector) = new(init_spins)
+
+    SingleSpinState(n_sites::Int) = new(bitrand(n_sites))
+
+    function SingleSpinState(n_sites::Int, n_particles::Int)
+        if !(n_sites > n_particles)
+            throw(ArgumentError("n_sites must be larger than n_particles"))
+        end
+        new(random_spins(n_sites, n_particles))
+    end
+
+end
 
 
 """
@@ -31,14 +40,22 @@ configurations, encoded in the bitstring forming `UInt`.
 """
 struct MultiSpinState <: EPState
     spins::Vector{UInt}
+
+    MultiSpinState(init_spins::Vector{UInt}) = new(init_spins)
+
+    MultiSpinState(n_sites::Int) = new(rand(UInt, n_sites))
+
+    function MultiSpinState(n_sites::Int, n_particles::Int)
+        if !(n_sites > n_particles)
+            throw(ArgumentError("n_sites must be larger than n_particles"))
+        end
+        new(random_multispins(n_sites, n_particles))
+    end
+
 end
 
-MultiSpinState(n_sites::Int) = MultiSpinState(rand(UInt, n_sites))
-MultiSpinState(n_sites::Int, n_particles) = MultiSpinState(random_multispins(n_sites, n_particles))
-
-
 """
-Returns vector of `UInt64`s corresponding to random configurations with fixed particle number.
+Returns vector of `UInt64`s corresponding to 64 random configurations with fixed particle number.
 """
 function random_multispins(n_sites::Int, n_particles::Int)
 
@@ -47,20 +64,26 @@ function random_multispins(n_sites::Int, n_particles::Int)
     integer_configs = []
 
     for j in 1:n_sites
-        bit_string = join(Vector{Int}(configs[j,:])) 
+        bit_string = join(Vector{Int}(configs[j,:]))
         append!(integer_configs, parse(UInt64, bit_string, 2))
     end
 
     return integer_configs
 end
 
-random_spins(n_sites::Int, n_particles::Int) = shuffle(vcat(trues(n_particles),falses(n_sites - n_particles)))
-
+"""
+Returns `BitArray` with random configuration of fixed particle number
+"""
+random_spins(n_sites::Int, n_particles::Int) = shuffle([trues(n_particles);falses(n_sites - n_particles)])
 
 """
-Returns distinct configurations
+Converts `UInt64` to 64 bit `BitArray`
 """
-function configs(multi::MultiSpinState)
-end
+uint2spins(ms::UInt64) = BitArray(split(bin(ms, 64), "") .== "1")
+
+"""
+Returns 2D array giving the 64 configurations encoded in a `MultiSpinState`
+"""
+spin_configs(mss::MultiSpinState) = hcat([uint2spins(ms) for ms in mss.spins]...)
 
 end

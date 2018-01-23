@@ -1,7 +1,7 @@
 module ExclusionProcesses
 
 # See http://www.stochasticlifestyle.com/finalizing-julia-package-documentation-testing-coverage-publishing/
-export EPState, SingleSpinState, MultiSpinState, PeriodicBC, OpenBC, SEP,
+export EPState, SingleSpinState, MultiSpinState, spin_configs, PeriodicBC, OpenBC, SEP,
         update!, Simulation
 
 
