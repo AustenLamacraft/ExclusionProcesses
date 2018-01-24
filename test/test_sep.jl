@@ -13,7 +13,6 @@ diff = xor.(init_spins, spin_state.spins)
 # For open boundary conditions the changed spins must be adjacent
 @test diff[indmax(diff) + 1] == true || sum(diff) == 0
 
-
 # Update of multispin configuration must cause convergence.
 # This means that each `UInt64` must change in a way that increases the absolute
 # value of the deviation from 32 of the number of 1s in its binary representation.
