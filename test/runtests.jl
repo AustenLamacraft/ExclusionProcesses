@@ -1,5 +1,6 @@
 names = [
-    "test_epstate.jl"
+    "test_epstate.jl",
+    "test_sep.jl"
 ]
 
 detected_tests = filter(

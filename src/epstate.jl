@@ -23,8 +23,8 @@ struct SingleSpinState <: EPState
     SingleSpinState(n_sites::Int) = new(bitrand(n_sites))
 
     function SingleSpinState(n_sites::Int, n_particles::Int)
-        if !(n_sites > n_particles)
-            throw(ArgumentError("n_sites must be larger than n_particles"))
+        if n_particles > n_sites
+            throw(ArgumentError("n_partices must be <= n_sites"))
         end
         new(random_spins(n_sites, n_particles))
     end
@@ -46,8 +46,8 @@ struct MultiSpinState <: EPState
     MultiSpinState(n_sites::Int) = new(rand(UInt, n_sites))
 
     function MultiSpinState(n_sites::Int, n_particles::Int)
-        if !(n_sites > n_particles)
-            throw(ArgumentError("n_sites must be larger than n_particles"))
+        if n_particles > n_sites
+            throw(ArgumentError("n_partices must be <= n_sites"))
         end
         new(random_multispins(n_sites, n_particles))
     end
